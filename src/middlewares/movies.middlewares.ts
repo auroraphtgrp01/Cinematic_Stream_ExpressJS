@@ -38,11 +38,35 @@ export const movieCreateValidator = validate(
   })
 )
 
-export const directorValidator = validate(checkSchema({
-  name: {
-    isString: {
-      errorMessage: 'name must be a string'
-    },
-    errorMessage: 'name is required'
-  }
-}))
+export const directorValidator = validate(
+  checkSchema({
+    name: {
+      isString: {
+        errorMessage: 'name must be a string'
+      },
+      errorMessage: 'name is required'
+    }
+  })
+)
+
+export const countriesValidator = validate(
+  checkSchema({
+    name: {
+      isString: {
+        errorMessage: 'name must be a string'
+      },
+      errorMessage: 'name is required'
+    }
+  })
+)
+
+export const languagesValidator = validate(
+  checkSchema({
+    name: {
+      isString: {
+        errorMessage: 'name must be a string'
+      },
+      errorMessage: 'name is required'
+    }
+  })
+)

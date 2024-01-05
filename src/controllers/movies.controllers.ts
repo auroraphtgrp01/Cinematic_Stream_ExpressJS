@@ -35,3 +35,23 @@ export const getDirectorController = async (req: Request, res: Response, next: N
   const result = await movieService.getDirector()
   return res.json(result)
 }
+
+export const createContriesController = async (req: Request, res: Response, next: NextFunction) => {
+  const result = await movieService.createContries(req.body.name)
+  return res.json(result)
+}
+
+export const getCountriesController = async (req: Request, res: Response, next: NextFunction) => {
+  const result = await movieService.getContries()
+  return res.json(result)
+}
+
+export const createLanguageController = async (req: Request, res: Response, next: NextFunction) => {
+  const result = await movieService.createLanguage(req.body.name)
+  return res.json(result)
+}
+
+export const getLanguageController = async (req: Request, res: Response, next: NextFunction) => {
+  const result = await movieService.getLanguage()
+  return res.json(result)
+}
