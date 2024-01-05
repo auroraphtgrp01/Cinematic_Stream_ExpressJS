@@ -25,3 +25,13 @@ export const getMovieController = async (req: Request, res: Response, next: Next
   const result = await movieService.getMovie(limit, page)
   return res.json(result)
 }
+
+export const createDirectorController = async (req: Request, res: Response, next: NextFunction) => {
+  const result = await movieService.createDirector(req.body.name)
+  return res.json(result)
+}
+
+export const getDirectorController = async (req: Request, res: Response, next: NextFunction) => {
+  const result = await movieService.getDirector()
+  return res.json(result)
+}

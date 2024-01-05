@@ -37,3 +37,12 @@ export const movieCreateValidator = validate(
     }
   })
 )
+
+export const directorValidator = validate(checkSchema({
+  name: {
+    isString: {
+      errorMessage: 'name must be a string'
+    },
+    errorMessage: 'name is required'
+  }
+}))

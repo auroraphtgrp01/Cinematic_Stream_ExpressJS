@@ -1,5 +1,6 @@
 import Movie from '~/models/schemas/Movie.schemas'
 import databaseService from './database.services'
+import Director from '~/models/schemas/Director.schemas'
 
 class MovieService {
   async createMovie(movie: Movie) {
@@ -8,7 +9,6 @@ class MovieService {
       message: 'Create movie successfully'
     }
   }
-
   async getMovie(limit: number = 0, page: number = 0) {
     const [result, total] = await Promise.all([
       databaseService.movies
@@ -90,6 +90,19 @@ class MovieService {
       page: page,
       limit: limit,
       total: Math.ceil(total[0].total / limit)
+    }
+  }
+  async createDirector(name: string) {
+    await databaseService.directors.insertOne(new Director({ name: name }))
+    return {
+      message: 'Create director successfully'
+    }
+  }
+  async getDirector() {
+    const result = await databaseService.directors.find({}).toArray()
+    return {
+      message: 'Get director successfully',
+      data: result
     }
   }
 }
