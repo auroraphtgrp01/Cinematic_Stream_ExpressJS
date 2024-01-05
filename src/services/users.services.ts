@@ -6,6 +6,7 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import { TokenType } from '~/constants/enums'
 import { random } from 'lodash'
 import RefreshToken from '~/models/schemas/RefreshToken.schemas'
+import { hashPassword } from '~/utils/hash'
 
 class UserServices {
   async register(payload: RegisterRequestBody) {
@@ -15,6 +16,7 @@ class UserServices {
       new User({
         _id: user_id,
         ...payload,
+        password: hashPassword(payload.password),
         date_of_birth: new Date(payload.date_of_birth),
         email_verify_token,
         username: payload.email.split('@')[0] + random(1000, 9999)
@@ -106,6 +108,28 @@ class UserServices {
   async checkExistEmail(email: string) {
     const check = await databaseService.users.findOne({ email })
     return Boolean(check)
+  }
+  async login(user_id: string) {
+    const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken(user_id)
+    const { exp, iat } = await this.decodedRefereshToken(refresh_token)
+    await databaseService.refresh_tokens.insertOne(
+      new RefreshToken({
+        user_id: new ObjectId(user_id),
+        token: refresh_token,
+        iat: iat as number,
+        exp: exp as number
+      })
+    )
+    return {
+      access_token,
+      refresh_token
+    }
+  }
+  async logout(user_id: string) {
+    await databaseService.refresh_tokens.deleteOne({ user_id: new ObjectId(user_id) })
+    return {
+      message: 'Logout successfully'
+    }
   }
 }
 
