@@ -2,6 +2,11 @@ import { Collection, Db, MongoClient } from 'mongodb'
 import { config } from 'dotenv'
 import User from '~/models/schemas/User.schemas'
 import RefreshToken from '~/models/schemas/RefreshToken.schemas'
+import Country from '~/models/schemas/Country.schemas'
+import Director from '~/models/schemas/Director.schemas'
+import Language from '~/models/schemas/Language.schemas'
+import Movie from '~/models/schemas/Movie.schemas'
+import Image from '~/models/schemas/Image.schemas'
 config()
 console.log('DB_USERNAME', process.env.DB_USERNAME)
 console.log('DB_PASSWORD', process.env.DB_PASSWORD)
@@ -29,6 +34,21 @@ class DatabaseService {
   }
   get refresh_tokens(): Collection<RefreshToken> {
     return this.db.collection(process.env.DB_REFRESH_TOKEN_COLLECTION as string)
+  }
+  get countries(): Collection<Country> {
+    return this.db.collection(process.env.DB_COUNTRY_COLLECTION as string)
+  }
+  get directors(): Collection<Director> {
+    return this.db.collection(process.env.DB_DIRECTOR_COLLECTION as string)
+  }
+  get languages(): Collection<Language> {
+    return this.db.collection(process.env.DB_LANGUAGE_COLLECTION as string)
+  }
+  get movies(): Collection<Movie> {
+    return this.db.collection(process.env.DB_MOVIE_COLLECTION as string)
+  }
+  get images(): Collection<Image> {
+    return this.db.collection(process.env.DB_IMAGE_COLLECTION as string)
   }
 }
 
