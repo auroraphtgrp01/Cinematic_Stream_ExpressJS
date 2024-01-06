@@ -10,3 +10,8 @@ export enum TokenType {
   ForgotPasswordToken,
   EmailVerifyToken
 }
+
+export enum VideoUploadType {
+  HLS,
+  Video
+}

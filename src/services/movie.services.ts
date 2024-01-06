@@ -3,6 +3,10 @@ import databaseService from './database.services'
 import Director from '~/models/schemas/Director.schemas'
 import Country from '~/models/schemas/Country.schemas'
 import Language from '~/models/schemas/Language.schemas'
+import Episodes from '~/models/schemas/Episodes.schemas'
+import { ObjectId } from 'mongodb'
+import { ErrorWithStatus } from '~/models/Errors'
+import HTTP_STATUS from '~/constants/httpStatus'
 
 class MovieService {
   async createMovie(movie: Movie) {
@@ -137,11 +141,9 @@ class MovieService {
         ])
         .toArray()
     ])
-    console.log(total[0].total)
     result.map((item: any) => {
       item.image = `${process.env.DOMAIN}${item.image}`
     })
-
     return {
       message: 'Get movie successfully',
       data: result,
@@ -188,6 +190,31 @@ class MovieService {
       message: 'Get language successfully',
       data: result
     }
+  }
+  async createEpisode(episodes: Episodes) {
+    const result = await databaseService.episodes.insertOne(episodes)
+    return result.insertedId
+  }
+  async getEpisodes(id_movie: string) {
+    const result = await databaseService.episodes
+      .aggregate([
+        {
+          $match: {
+            id_movie: new ObjectId(id_movie)
+          }
+        }
+      ])
+      .toArray()
+    if (result.length === 0) {
+      throw new ErrorWithStatus({
+        message: 'Episode not found!',
+        status: HTTP_STATUS.NOT_FOUND
+      })
+    }
+    result.map((item: any) => {
+      item.path = `${process.env.DOMAIN}/static/video/${id_movie}/${item._id}.mp4`
+    })
+    return result
   }
 }
 const movieService = new MovieService()

@@ -1,8 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
+import formidable from 'formidable'
+import { existsSync } from 'fs'
 import { ObjectId } from 'mongodb'
+import Episodes from '~/models/schemas/Episodes.schemas'
 import Movie from '~/models/schemas/Movie.schemas'
 import imageService from '~/services/images.services'
 import movieService from '~/services/movie.services'
+import { handlerUploadVideo } from '~/utils/file'
 
 export const createMovieController = async (req: Request, res: Response, next: NextFunction) => {
   const id_img = await imageService.uploadImage(req.body.image)
@@ -54,4 +58,25 @@ export const createLanguageController = async (req: Request, res: Response, next
 export const getLanguageController = async (req: Request, res: Response, next: NextFunction) => {
   const result = await movieService.getLanguage()
   return res.json(result)
+}
+
+export const createEpisodeController = async (req: Request, res: Response, next: NextFunction) => {
+  const episodes = new Episodes({
+    num_ep: req.query.num as string,
+    description: req.query.desc as string,
+    id_movie: new ObjectId(req.query.id as string)
+  })
+  const result = await movieService.createEpisode(episodes)
+  await handlerUploadVideo(req, req.query.id as string, result.toString())
+  return res.json({
+    message: 'Create episode successfully'
+  })
+}
+
+export const getEpisodesController = async (req: Request, res: Response, next: NextFunction) => {
+  const id_movie = req.params.id
+  const result = await movieService.getEpisodes(id_movie as string)
+  return res.json({
+    result: result
+  })
 }

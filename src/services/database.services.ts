@@ -7,6 +7,7 @@ import Director from '~/models/schemas/Director.schemas'
 import Language from '~/models/schemas/Language.schemas'
 import Movie from '~/models/schemas/Movie.schemas'
 import Image from '~/models/schemas/Image.schemas'
+import Episodes from '~/models/schemas/Episodes.schemas'
 config()
 console.log('DB_USERNAME', process.env.DB_USERNAME)
 console.log('DB_PASSWORD', process.env.DB_PASSWORD)
@@ -49,6 +50,9 @@ class DatabaseService {
   }
   get images(): Collection<Image> {
     return this.db.collection(process.env.DB_IMAGE_COLLECTION as string)
+  }
+  get episodes(): Collection<Episodes> {
+    return this.db.collection(process.env.DB_EPISODES_COLLECTION as string)
   }
 }
 

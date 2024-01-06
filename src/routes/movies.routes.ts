@@ -2,12 +2,14 @@ import { Router } from 'express'
 import {
   createContriesController,
   createDirectorController,
+  createEpisodeController,
   createLanguageController,
   createMovieController,
   getCountriesController,
   getDirectorController,
+  getEpisodesController,
   getLanguageController,
-  getMovieController,
+  getMovieController
 } from '~/controllers/movies.controllers'
 import { paginationValidator } from '~/middlewares/common.middlewares'
 import {
@@ -50,5 +52,9 @@ movieRouter.post(
   wrapRequestHandler(createLanguageController)
 )
 movieRouter.get('/languages/get', wrapRequestHandler(getLanguageController))
+
+movieRouter.post('/episodes/create', accessTokenValidator, wrapRequestHandler(createEpisodeController))
+
+movieRouter.get('/episodes/get/:id', wrapRequestHandler(getEpisodesController))
 
 export default movieRouter
