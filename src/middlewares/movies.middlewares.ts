@@ -3,9 +3,9 @@ import { checkSchema } from 'express-validator'
 
 export const movieCreateValidator = validate(
   checkSchema({
-    url_image: {
+    image: {
       isString: true,
-      errorMessage: 'url_image is required'
+      errorMessage: 'image is required'
     },
     original_name: {
       isString: true,

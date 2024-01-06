@@ -5,7 +5,7 @@ import imageService from '~/services/images.services'
 import movieService from '~/services/movie.services'
 
 export const createMovieController = async (req: Request, res: Response, next: NextFunction) => {
-  const id_img = await imageService.uploadImage(req.body.url_image)
+  const id_img = await imageService.uploadImage(req.body.image)
   const movie = new Movie({
     original_name: req.body.original_name,
     vietnamese_name: req.body.vietnamese_name,

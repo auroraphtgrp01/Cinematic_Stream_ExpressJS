@@ -91,6 +91,24 @@ class MovieService {
             }
           },
           {
+            $lookup: {
+              from: 'images',
+              localField: 'id_img',
+              foreignField: '_id',
+              as: 'image'
+            }
+          },
+          {
+            $unwind: {
+              path: '$image'
+            }
+          },
+          {
+            $addFields: {
+              image: '$image.path'
+            }
+          },
+          {
             $project: {
               url: 0,
               id_img: 0,
@@ -120,6 +138,10 @@ class MovieService {
         .toArray()
     ])
     console.log(total[0].total)
+    result.map((item: any) => {
+      item.image = `${process.env.DOMAIN}${item.image}`
+    })
+
     return {
       message: 'Get movie successfully',
       data: result,

@@ -7,7 +7,7 @@ import {
   getCountriesController,
   getDirectorController,
   getLanguageController,
-  getMovieController
+  getMovieController,
 } from '~/controllers/movies.controllers'
 import { paginationValidator } from '~/middlewares/common.middlewares'
 import {
@@ -21,7 +21,7 @@ import { wrapRequestHandler } from '~/utils/handlers'
 
 const movieRouter = Router()
 
-movieRouter.post('/create', movieCreateValidator, wrapRequestHandler(createMovieController))
+movieRouter.post('/create', accessTokenValidator, movieCreateValidator, wrapRequestHandler(createMovieController))
 
 movieRouter.get('/get', paginationValidator, wrapRequestHandler(getMovieController))
 
@@ -50,4 +50,5 @@ movieRouter.post(
   wrapRequestHandler(createLanguageController)
 )
 movieRouter.get('/languages/get', wrapRequestHandler(getLanguageController))
+
 export default movieRouter
