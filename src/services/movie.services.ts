@@ -7,6 +7,7 @@ import Episodes from '~/models/schemas/Episodes.schemas'
 import { ObjectId } from 'mongodb'
 import { ErrorWithStatus } from '~/models/Errors'
 import HTTP_STATUS from '~/constants/httpStatus'
+import Type from '~/models/schemas/Type.schemas'
 
 class MovieService {
   async createMovie(movie: Movie) {
@@ -113,13 +114,33 @@ class MovieService {
             }
           },
           {
+            $lookup: {
+              from: 'types',
+              localField: 'id_type',
+              foreignField: '_id',
+              as: 'types'
+            }
+          },
+          {
+            $addFields: {
+              types: {
+                $map: {
+                  input: '$types',
+                  as: 'type',
+                  in: '$$type.name'
+                }
+              }
+            }
+          },
+          {
             $project: {
               url: 0,
               id_img: 0,
               id_director: 0,
               directors: 0,
               id_contries: 0,
-              id_language_original: 0
+              id_language_original: 0,
+              id_type: 0
             }
           },
           {
@@ -149,7 +170,7 @@ class MovieService {
       data: result,
       page: page,
       limit: limit,
-      total: Math.ceil(total[0].total / limit)
+      total: Math.ceil(total[0]?.total / limit)
     }
   }
   async createDirector(name: string) {
@@ -215,6 +236,12 @@ class MovieService {
       item.path = `${process.env.DOMAIN}/static/video/${id_movie}/${item._id}.mp4`
     })
     return result
+  }
+  async createTypeMovie(type: Type) {
+    await databaseService.types.insertOne(type)
+    return {
+      message: 'Create type successfully'
+    }
   }
 }
 const movieService = new MovieService()

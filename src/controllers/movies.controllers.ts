@@ -4,6 +4,7 @@ import { existsSync } from 'fs'
 import { ObjectId } from 'mongodb'
 import Episodes from '~/models/schemas/Episodes.schemas'
 import Movie from '~/models/schemas/Movie.schemas'
+import Type from '~/models/schemas/Type.schemas'
 import imageService from '~/services/images.services'
 import movieService from '~/services/movie.services'
 import { handlerUploadVideo } from '~/utils/file'
@@ -15,6 +16,7 @@ export const createMovieController = async (req: Request, res: Response, next: N
     vietnamese_name: req.body.vietnamese_name,
     description: req.body.description,
     id_img: new ObjectId(id_img),
+    id_type: req.body.id_type.map((item: string) => new ObjectId(item)),
     id_contries: new ObjectId(req.body.id_contries),
     id_director: new ObjectId(req.body.id_director),
     id_user_upload: new ObjectId(req.body.id_user_upload),
@@ -79,4 +81,12 @@ export const getEpisodesController = async (req: Request, res: Response, next: N
   return res.json({
     result: result
   })
+}
+
+export const TypeMovieCreatController = async (req: Request, res: Response, next: NextFunction) => {
+  const type = new Type({
+    name: req.body.name
+  })
+  const result = await movieService.createTypeMovie(type)
+  return res.json(result)
 }

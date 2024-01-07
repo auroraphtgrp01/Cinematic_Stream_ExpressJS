@@ -1,6 +1,7 @@
 import { Request } from 'express'
 import { ParamSchema, check, checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
+import { UserTypes } from '~/constants/enums'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { ErrorWithStatus } from '~/models/Errors'
 import { TokenPayload } from '~/models/requests/User.requests'
@@ -182,4 +183,38 @@ export const refreshTokenValidator = validate(
       }
     }
   })
+)
+
+export const employeeValidator = validate(
+  checkSchema(
+    {
+      name: nameSchema,
+      email: {
+        notEmpty: {
+          errorMessage: 'Email cannot be empty'
+        },
+        trim: true,
+        isEmail: {
+          errorMessage: 'Email must be a valid email'
+        },
+        custom: {
+          options: async (value, { req }) => {
+            const decoeded_access_token = req.decoded_authorization as TokenPayload
+            console.log(decoeded_access_token)
+            if (decoeded_access_token.user_type !== UserTypes.Employee) {
+              throw new Error('You are not employee')
+            }
+            const checkExistEmail = await userServices.checkExistEmail(value)
+            if (checkExistEmail) {
+              throw new Error('Email already exists')
+            }
+            return true
+          }
+        }
+      },
+      password: passwordSchemas,
+      confirmPassword: confirmPasswordSchemas
+    },
+    ['body']
+  )
 )

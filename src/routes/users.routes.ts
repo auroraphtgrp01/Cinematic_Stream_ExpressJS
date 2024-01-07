@@ -1,7 +1,13 @@
 import Router from 'express'
-import { LoginUserController, LogoutUserController, RegisterUserController } from '~/controllers/users.controllers'
+import {
+  CreatePermissionController,
+  LoginUserController,
+  LogoutUserController,
+  RegisterUserController
+} from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
+  employeeValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator
@@ -15,5 +21,14 @@ usersRouter.post('/register', registerValidator, wrapRequestHandler(RegisterUser
 usersRouter.post('/login', loginValidator, wrapRequestHandler(LoginUserController))
 
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler(LogoutUserController))
+
+usersRouter.post('/permission/create', accessTokenValidator, wrapRequestHandler(CreatePermissionController))
+
+usersRouter.post(
+  '/employee/create',
+  accessTokenValidator,
+  employeeValidator,
+  wrapRequestHandler(RegisterUserController)
+)
 
 export default usersRouter

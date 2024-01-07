@@ -6,6 +6,7 @@ export interface MovieType {
   vietnamese_name: string
   id_img: ObjectId
   rating?: number
+  id_type: ObjectId[]
   description?: string
   id_contries: ObjectId
   id_director: ObjectId
@@ -22,6 +23,7 @@ export default class Movie {
   original_name: string
   vietnamese_name: string
   id_img?: ObjectId
+  id_type: ObjectId[]
   rating?: number
   description?: string
   id_contries: ObjectId
@@ -39,6 +41,7 @@ export default class Movie {
     this.vietnamese_name = movie.vietnamese_name
     this.id_img = movie.id_img
     this.rating = movie.rating
+    this.id_type = movie.id_type
     this.description = movie.description
     this.id_contries = movie.id_contries
     this.id_director = movie.id_director

@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import {
+  TypeMovieCreatController,
   createContriesController,
   createDirectorController,
   createEpisodeController,
@@ -15,8 +16,10 @@ import { paginationValidator } from '~/middlewares/common.middlewares'
 import {
   countriesValidator,
   directorValidator,
+  eposodeCreateValidator,
   languagesValidator,
-  movieCreateValidator
+  movieCreateValidator,
+  typeCreateValidator
 } from '~/middlewares/movies.middlewares'
 import { accessTokenValidator } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
@@ -53,8 +56,19 @@ movieRouter.post(
 )
 movieRouter.get('/languages/get', wrapRequestHandler(getLanguageController))
 
-movieRouter.post('/episodes/create', accessTokenValidator, wrapRequestHandler(createEpisodeController))
+movieRouter.post(
+  '/episodes/create',
+  eposodeCreateValidator,
+  accessTokenValidator,
+  wrapRequestHandler(createEpisodeController)
+)
 
 movieRouter.get('/episodes/get/:id', wrapRequestHandler(getEpisodesController))
 
+movieRouter.post(
+  '/types/create',
+  accessTokenValidator,
+  typeCreateValidator,
+  wrapRequestHandler(TypeMovieCreatController)
+)
 export default movieRouter

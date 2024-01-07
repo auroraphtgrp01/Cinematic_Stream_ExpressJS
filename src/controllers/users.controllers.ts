@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
+import { Function, UserTypes } from '~/constants/enums'
 import { TokenPayload } from '~/models/requests/User.requests'
+import Permisstion from '~/models/schemas/Permission.schemas'
 import databaseService from '~/services/database.services'
 import userServices from '~/services/users.services'
 
@@ -29,4 +31,29 @@ export const LogoutUserController = async (req: Request, res: Response, next: Ne
   const { user_id } = req.decoded_authorization as TokenPayload
   const result = await userServices.logout(user_id)
   return res.json(result)
+}
+
+export const CreatePermissionController = async (req: Request, res: Response, next: NextFunction) => {
+  const id_function = req.body.id_function
+  const permission = new Permisstion({
+    name: req.body.name as string,
+    id_function: id_function.map((item: string) => parseInt(item))
+  })
+  const result = await userServices.permissionCreate(permission)
+  return res.json(result)
+}
+
+export const GetPermissionController = async (req: Request, res: Response, next: NextFunction) => {
+  const func = Function
+  return res.json({
+    message: 'Get permission successfully',
+    data: func
+  })
+}
+
+export const AddPermissonToUserController = async (req: Request, res: Response, next: NextFunction) => {
+  await userServices.addPermissonToUser(req.body.id_user, req.body.id_permission)
+  return res.json({
+    message: 'Add permission to user successfully'
+  })
 }

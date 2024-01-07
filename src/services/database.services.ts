@@ -8,6 +8,8 @@ import Language from '~/models/schemas/Language.schemas'
 import Movie from '~/models/schemas/Movie.schemas'
 import Image from '~/models/schemas/Image.schemas'
 import Episodes from '~/models/schemas/Episodes.schemas'
+import Type from '~/models/schemas/Type.schemas'
+import Permisstion from '~/models/schemas/Permission.schemas'
 config()
 console.log('DB_USERNAME', process.env.DB_USERNAME)
 console.log('DB_PASSWORD', process.env.DB_PASSWORD)
@@ -54,8 +56,13 @@ class DatabaseService {
   get episodes(): Collection<Episodes> {
     return this.db.collection(process.env.DB_EPISODES_COLLECTION as string)
   }
+  get types(): Collection<Type> {
+    return this.db.collection(process.env.DB_TYPE_COLLECTION as string)
+  }
+  get permissions(): Collection<Permisstion> {
+    return this.db.collection(process.env.DB_PERMISSION_COLLECTION as string)
+  }
 }
-
 const databaseService = new DatabaseService()
 
 export default databaseService

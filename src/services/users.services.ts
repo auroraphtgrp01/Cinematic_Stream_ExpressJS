@@ -3,10 +3,11 @@ import { RegisterRequestBody } from '~/models/requests/User.requests'
 import databaseService from './database.services'
 import User from '~/models/schemas/User.schemas'
 import { signToken, verifyToken } from '~/utils/jwt'
-import { TokenType } from '~/constants/enums'
+import { TokenType, UserTypes } from '~/constants/enums'
 import { random } from 'lodash'
 import RefreshToken from '~/models/schemas/RefreshToken.schemas'
 import { hashPassword } from '~/utils/hash'
+import Permisstion from '~/models/schemas/Permission.schemas'
 
 class UserServices {
   async register(payload: RegisterRequestBody) {
@@ -19,10 +20,14 @@ class UserServices {
         password: hashPassword(payload.password),
         date_of_birth: new Date(payload.date_of_birth),
         email_verify_token,
+        user_type: UserTypes.Client,
         username: payload.email.split('@')[0] + random(1000, 9999)
       })
     )
-    const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken((user_id as ObjectId).toString())
+    const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken(
+      (user_id as ObjectId).toString(),
+      UserTypes.Client
+    )
     const { exp, iat } = await this.decodedRefereshToken(refresh_token)
     await databaseService.refresh_tokens.insertOne(
       new RefreshToken({
@@ -37,10 +42,11 @@ class UserServices {
       refresh_token
     }
   }
-  private signAccessToken(user_id: string) {
+  private signAccessToken(user_id: string, user_type: UserTypes) {
     return signToken({
       payload: {
         user_id,
+        user_type,
         token_type: TokenType.AccessToken
       },
       privateKey: process.env.JWT_ACCESS_TOKEN_SECRET as string,
@@ -96,8 +102,8 @@ class UserServices {
     })
   }
 
-  private signAccessTokenAndRefreshToken(user_id: string) {
-    return Promise.all([this.signAccessToken(user_id), this.signRefreshToken({ user_id })])
+  private signAccessTokenAndRefreshToken(user_id: string, user_type: UserTypes) {
+    return Promise.all([this.signAccessToken(user_id, user_type), this.signRefreshToken({ user_id })])
   }
   private decodedRefereshToken(refresh_token: string) {
     return verifyToken({
@@ -110,7 +116,11 @@ class UserServices {
     return Boolean(check)
   }
   async login(user_id: string) {
-    const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken(user_id)
+    const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
+    const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken(
+      user_id,
+      user?.user_type as UserTypes
+    )
     const { exp, iat } = await this.decodedRefereshToken(refresh_token)
     await databaseService.refresh_tokens.insertOne(
       new RefreshToken({
@@ -131,8 +141,31 @@ class UserServices {
       message: 'Logout successfully'
     }
   }
+  async permissionCreate(permission: Permisstion) {
+    await databaseService.permissions.insertOne(permission)
+    return {
+      message: 'Create permission successfully'
+    }
+  }
+  async checkPermisson(id_user: string) {
+    const user = await databaseService.users.findOne({ _id: new ObjectId(id_user) })
+    const permission = await databaseService.permissions.findOne({ _id: new ObjectId(user?.id_permission) })
+    return permission
+  }
+  async addPermissonToUser(id_user: string, id_permission: string) {
+    await databaseService.users.updateOne(
+      { _id: new ObjectId(id_user) },
+      {
+        $set: {
+          id_permission: new ObjectId(id_permission)
+        }
+      }
+    )
+    return {
+      message: 'Add permission to user successfully'
+    }
+  }
 }
-
 const userServices = new UserServices()
 
 export default userServices
