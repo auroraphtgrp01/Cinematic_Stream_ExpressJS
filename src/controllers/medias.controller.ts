@@ -4,9 +4,11 @@ import { UPLOAD_IMAGE_DIR, UPLOAD_VIDEO_DIR } from '~/constants/dir'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { handleUploadImage, handlerUploadVideo } from '~/utils/file'
 import fs from 'fs'
+import imageService from '~/services/images.services'
 
 export const uploadImageController = async (req: Request, res: Response, next: NextFunction) => {
   const result = await handleUploadImage(req)
+  await imageService.uploadImage(result[0]?.newFilename)
   return res.json({
     message: 'Upload image successfully',
     result: result[0]?.newFilename

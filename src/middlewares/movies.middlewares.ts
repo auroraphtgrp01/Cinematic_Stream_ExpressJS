@@ -67,7 +67,8 @@ export const countriesValidator = validate(
     name: {
       isString: {
         errorMessage: 'name must be a string'
-      }, custom: {
+      },
+      custom: {
         options: (value, { req }) => {
           const id_function = 12
           const permission = permissionValidator(id_function, req as Request)
@@ -85,7 +86,8 @@ export const languagesValidator = validate(
     name: {
       isString: {
         errorMessage: 'name must be a string'
-      }, custom: {
+      },
+      custom: {
         options: (value, { req }) => {
           const id_function = 12
           const permission = permissionValidator(id_function, req as Request)
@@ -98,56 +100,62 @@ export const languagesValidator = validate(
   })
 )
 
-export const typeCreateValidator = validate(checkSchema({
-  name: {
-    isString: {
-      errorMessage: 'name must be a string'
-    }, custom: {
-      options: (value, { req }) => {
-        const id_function = 12
-        const permission = permissionValidator(id_function, req as Request)
-        if (!permission) throw new Error('You do not have permission to perform this action')
-        return true
-      }
-    },
-    errorMessage: 'name is required'
-  }
-}))
+export const typeCreateValidator = validate(
+  checkSchema({
+    name: {
+      isString: {
+        errorMessage: 'name must be a string'
+      },
+      custom: {
+        options: (value, { req }) => {
+          const id_function = 12
+          const permission = permissionValidator(id_function, req as Request)
+          if (!permission) throw new Error('You do not have permission to perform this action')
+          return true
+        }
+      },
+      errorMessage: 'name is required'
+    }
+  })
+)
 
-export const eposodeCreateValidator = validate(checkSchema({
-  num: {
-    errorMessage: 'num is required'
-  },
-  desc: {
-    errorMessage: 'num is required'
-  },
-  id: {
-    errorMessage: 'id is required',
-    custom: {
-      options: (value, { req }) => {
-        const id_function = 3
-        const permission = permissionValidator(id_function, req as Request)
-        if (!permission) throw new Error('You do not have permission to perform this action')
-        return true
-      }
+export const eposodeCreateValidator = validate(
+  checkSchema({
+    num: {
+      errorMessage: 'num is required'
     },
-  }
-}))
+    desc: {
+      errorMessage: 'num is required'
+    },
+    id: {
+      errorMessage: 'id is required',
+      custom: {
+        options: (value, { req }) => {
+          const id_function = 3
+          const permission = permissionValidator(id_function, req as Request)
+          if (!permission) throw new Error('You do not have permission to perform this action')
+          return true
+        }
+      }
+    }
+  })
+)
 
-export const addPermissonValidator = validate(checkSchema({
-  id_user: {
-    errorMessage: 'id_user is required',
-    custom: {
-      options: async (value, { req }) => {
-        const id_function = 16
-        const permission = await permissionValidator(id_function, req as Request)
-        if (!permission) throw new Error('You do not have permission to perform this action')
-        return true
+export const addPermissonValidator = validate(
+  checkSchema({
+    id_user: {
+      errorMessage: 'id_user is required',
+      custom: {
+        options: async (value, { req }) => {
+          const id_function = 16
+          const permission = await permissionValidator(id_function, req as Request)
+          if (!permission) throw new Error('You do not have permission to perform this action')
+          return true
+        }
       }
     },
-  },
-  id_permission: {
-    errorMessage: 'id_permission is required'
-  }
-})
+    id_permission: {
+      errorMessage: 'id_permission is required'
+    }
+  })
 )

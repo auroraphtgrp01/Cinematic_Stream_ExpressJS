@@ -38,5 +38,12 @@ export enum Function {
   Delete_InfoMovie,
   Update_InfoMovie,
   AddPermisson,
-  UpdatePermission,
+  UpdatePermission
+}
+
+export enum EncodingStatus {
+  Pending,
+  Processing,
+  Success,
+  Failed
 }

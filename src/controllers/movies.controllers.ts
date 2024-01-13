@@ -7,7 +7,7 @@ import Movie from '~/models/schemas/Movie.schemas'
 import Type from '~/models/schemas/Type.schemas'
 import imageService from '~/services/images.services'
 import movieService from '~/services/movie.services'
-import { handlerUploadVideo } from '~/utils/file'
+import { handleUploadHLS, handlerUploadVideo } from '~/utils/file'
 
 export const createMovieController = async (req: Request, res: Response, next: NextFunction) => {
   const id_img = await imageService.uploadImage(req.body.image)
@@ -68,10 +68,11 @@ export const createEpisodeController = async (req: Request, res: Response, next:
     description: req.query.desc as string,
     id_movie: new ObjectId(req.query.id as string)
   })
-  const result = await movieService.createEpisode(episodes)
-  await handlerUploadVideo(req, req.query.id as string, result.toString())
+  const create = await movieService.createEpisode(episodes)
+  const result = await handleUploadHLS(req, req.query.id as string, create.toString())
   return res.json({
-    message: 'Create episode successfully'
+    message: 'Create episode successfully',
+    result: 'result'
   })
 }
 

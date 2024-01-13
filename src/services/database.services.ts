@@ -10,6 +10,8 @@ import Image from '~/models/schemas/Image.schemas'
 import Episodes from '~/models/schemas/Episodes.schemas'
 import Type from '~/models/schemas/Type.schemas'
 import Permisstion from '~/models/schemas/Permission.schemas'
+import { VideoStatus } from '~/models/schemas/VideoStatus.schemas'
+import Queue from '~/models/schemas/Queue.schemas'
 config()
 console.log('DB_USERNAME', process.env.DB_USERNAME)
 console.log('DB_PASSWORD', process.env.DB_PASSWORD)
@@ -61,6 +63,12 @@ class DatabaseService {
   }
   get permissions(): Collection<Permisstion> {
     return this.db.collection(process.env.DB_PERMISSION_COLLECTION as string)
+  }
+  get video_status(): Collection<VideoStatus> {
+    return this.db.collection(process.env.DB_VIDEO_STATUS_COLLECTION as string)
+  }
+  get queue(): Collection<Queue> {
+    return this.db.collection(process.env.DB_QUEUE_COLLECTION as string)
   }
 }
 const databaseService = new DatabaseService()

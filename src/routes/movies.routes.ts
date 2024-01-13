@@ -58,8 +58,8 @@ movieRouter.get('/languages/get', wrapRequestHandler(getLanguageController))
 
 movieRouter.post(
   '/episodes/create',
-  eposodeCreateValidator,
   accessTokenValidator,
+  eposodeCreateValidator,
   wrapRequestHandler(createEpisodeController)
 )
 
