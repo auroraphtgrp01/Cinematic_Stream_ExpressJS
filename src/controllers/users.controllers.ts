@@ -57,3 +57,12 @@ export const AddPermissonToUserController = async (req: Request, res: Response, 
     message: 'Add permission to user successfully'
   })
 }
+
+export const GetProfileController = async (req: Request, res: Response, next: NextFunction) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const result = await userServices.getProfile(user_id)
+  return res.json({
+    message: 'Get profile successfully',
+    data: result
+  })
+}

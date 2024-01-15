@@ -165,6 +165,22 @@ class UserServices {
       message: 'Add permission to user successfully'
     }
   }
+  async getProfile(id_user: string) {
+    const user = await databaseService.users.findOne(
+      { _id: new ObjectId(id_user) },
+      {
+        projection: {
+          password: 0,
+          email_verify_token: 0,
+          forgot_password_token: 0,
+          id_permission: 0,
+          created_at: 0,
+          updated_at: 0
+        }
+      }
+    )
+    return user
+  }
 }
 const userServices = new UserServices()
 

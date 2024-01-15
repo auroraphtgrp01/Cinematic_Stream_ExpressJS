@@ -12,6 +12,7 @@ import Type from '~/models/schemas/Type.schemas'
 import Permisstion from '~/models/schemas/Permission.schemas'
 import { VideoStatus } from '~/models/schemas/VideoStatus.schemas'
 import Queue from '~/models/schemas/Queue.schemas'
+import Conversation from '~/models/schemas/Conversation.schemas'
 config()
 console.log('DB_USERNAME', process.env.DB_USERNAME)
 console.log('DB_PASSWORD', process.env.DB_PASSWORD)
@@ -69,6 +70,9 @@ class DatabaseService {
   }
   get queue(): Collection<Queue> {
     return this.db.collection(process.env.DB_QUEUE_COLLECTION as string)
+  }
+  get conversation(): Collection<Conversation> {
+    return this.db.collection(process.env.DB_CONVERSATION_COLLECTION as string)
   }
 }
 const databaseService = new DatabaseService()

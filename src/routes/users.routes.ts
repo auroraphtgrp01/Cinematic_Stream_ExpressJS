@@ -1,6 +1,7 @@
 import Router from 'express'
 import {
   CreatePermissionController,
+  GetProfileController,
   LoginUserController,
   LogoutUserController,
   RegisterUserController
@@ -30,5 +31,7 @@ usersRouter.post(
   employeeValidator,
   wrapRequestHandler(RegisterUserController)
 )
+
+usersRouter.get('/get-profile', accessTokenValidator, wrapRequestHandler(GetProfileController))
 
 export default usersRouter

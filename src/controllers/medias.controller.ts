@@ -58,19 +58,19 @@ export const uploadVideoController = async (req: Request, res: Response, next: N
 }
 
 export const serveHLSController = async (req: Request, res: Response, next: NextFunction) => {
-  res.header('Content-Type', 'application/vnd.apple.mpegurl');
-  res.header('Cache-Control', 'no-cache');
+  res.header('Content-Type', 'application/vnd.apple.mpegurl')
+  res.header('Cache-Control', 'no-cache')
   const { id_movie, id_episode } = req.params
   const m3u8FilePath = path.resolve(`uploads/movies/videos/${id_movie}/${id_episode}`, 'master.m3u8')
   console.log(m3u8FilePath)
-  const stream = fs.createReadStream(m3u8FilePath);
+  const stream = fs.createReadStream(m3u8FilePath)
   stream.pipe(res)
 }
 
 export const serveSegmentHLSController = async (req: Request, res: Response, next: NextFunction) => {
   const { v, segment, id_movie, id_episode } = req.params
-  res.header('Content-Type', 'application/vnd.apple.mpegurl');
-  res.header('Cache-Control', 'no-cache');
+  res.header('Content-Type', 'application/vnd.apple.mpegurl')
+  res.header('Cache-Control', 'no-cache')
   const m3u8FilePath = path.resolve(`uploads/movies/videos/${id_movie}/${id_episode}/${v}/${segment}`)
   const stream = fs.createReadStream(m3u8FilePath)
   stream.pipe(res)
